@@ -7,9 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @WebServlet("/registro")
 public class FormServlet extends HttpServlet {
@@ -29,28 +27,28 @@ public class FormServlet extends HttpServlet {
         boolean habilitar = req.getParameter("habilitar") != null && req.getParameter("habilitar").equals("on");
         String secreto = req.getParameter("secreto");
 
-        List<String> errores = new ArrayList<>();
+        Map<String, String> errores = new HashMap<>();
 
         if (username == null || username.isEmpty()) {
-            errores.add("el username es requerido!");
+            errores.put("username","el username es requerido!");
         }
         if (password == null || password.isEmpty()) {
-            errores.add("El password no puede ser vacio!");
+            errores.put("password","El password no puede ser vacio!");
         }
         if (email == null || !email.contains("@")) {
-            errores.add("El email es requerido y debe tener un formato de correo valido!");
+            errores.put("email","El email es requerido y debe tener un formato de correo valido!");
         }
-        if (pais == null || pais.isEmpty() || pais.equals(" ")) {
-            errores.add("El pais es requerido");
+        if (pais == null || pais.trim().isEmpty() || pais.equals(" ")) {
+            errores.put("pais","El pais es requerido");
         }
         if (lenguajes == null || lenguajes.length == 0) {
-            errores.add("Debe seleccionar un tema");
+            errores.put("lenguajes","Debe seleccionar un tema");
         }
         if (roles == null || roles.length == 0) {
-            errores.add("Debe seleccionar al menos un role!");
+            errores.put("roles","Debe seleccionar al menos un role!");
         }
         if (idioma == null) {
-            errores.add("Debe seleccionar un idioma!");
+            errores.put("idioma","Debe seleccionar un idioma!");
         }
         if (errores.isEmpty()) {
             try (PrintWriter out = resp.getWriter()) {
@@ -85,7 +83,6 @@ public class FormServlet extends HttpServlet {
                 out.println("                       <li>Idioma: " + idioma + "</li>");
                 out.println("                       <li>Habilitado: " + habilitar + "</li>");
                 out.println("                       <li>Secreto: " + secreto + "</li>");
-
             }
         } else {
 //                errores.forEach(error ->
